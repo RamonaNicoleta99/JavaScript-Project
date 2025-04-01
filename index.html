@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ebook App</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body
+    class="min-h-screen flex flex-col text-gray-900 transition-colors duration-300"
+  >
+    <!-- HEADER -->
+    <header class="bg-blue-800 shadow-md fixed w-full z-20">
+      <div
+        class="container mx-auto px-4 py-3 flex justify-between items-center flex flex-col md:flex-row p-8 rounded-lg shadow-lg"
+      >
+        <a href="#" class="text-2xl font-bold font-mono text-white">Readify</a>
+        <div class="flex items-center space-x-4 font-serif">
+          <button
+            onclick="toggleTheme()"
+            class="flex items-center bg-blue-500 text-white px-4 py-2 rounded-lg transition-all duration-300"
+          >
+            <span id="themeIcon" class="mr-2">🌞</span>
+            <span id="themeText">Day</span>
+          </button>
+          <button
+            onclick="openModal('loginModal')"
+            class="bg-gray-200 text-gray-900 px-4 py-2 rounded-lg hover:bg-gray-300"
+          >
+            Log In
+          </button>
+          <button
+            onclick="openModal('signUpModal')"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Sign Up
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <div
+      class="flex-grow relative w-full h-64 sm:h-80 md:h-96 bg-cover bg-center pt-16"
+      style="
+        background-image: url('https://ellygriffiths.co.uk/wp-content/uploads/2015/09/header-books.jpg');
+      "
+    >
+      <div class="absolute inset-0 bg-black opacity-50"></div>
+      <div
+        class="relative z-10 flex items-center justify-center w-full h-full text-center text-white"
+      >
+        <div>
+          <h1
+            class="text-2xl sm:text-3xl md:text-4xl font-bold font-serif leading-tight mb-4"
+          >
+            Discover the World of Books
+          </h1>
+          <p class="text-sm sm:text-base md:text-xl mb-4 font-serif">
+            Dive into the most captivating stories and learn from the deepest
+            reads.
+          </p>
+          <a
+            href="#more"
+            class="bg-blue-500 text-white py-2 px-4 font-serif rounded-lg hover:bg-blue-600 transition duration-300"
+            >Read More</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGIN MODAL -->
+    <div
+      id="loginModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold mb-4">Log In</h2>
+        <input
+          type="text"
+          placeholder="Email"
+          class="w-full mb-2 p-2 border rounded"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          class="w-full mb-4 p-2 border rounded"
+        />
+        <button
+          class="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
+        >
+          Login
+        </button>
+        <button
+          onClick="closeModal('loginModal')"
+          class="mt-2 w-full text-gray-600 hover:underline"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- SIGNUP MODAL -->
+    <div
+      id="signUpModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold mb-4">Sign Up</h2>
+        <input
+          type="text"
+          placeholder="Name"
+          class="w-full mb-2 p-2 border rounded"
+        />
+        <input
+          type="email"
+          placeholder="Email"
+          class="w-full mb-2 p-2 border rounded"
+        />
+        <input
+          type="password"
+          placeholder="Password"
+          class="w-full mb-4 p-2 border rounded"
+        />
+        <button
+          class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+        >
+          Sign Up
+        </button>
+        <button
+          onClick="closeModal('signUpModal')"
+          class="mt-2 w-full text-gray-600 hover:underline"
+        >
+          Close
+        </button>
+      </div>
+          
+    </div>
+
+    <!-- SEARCH SECTION -->
+    <section class="container mx-auto px-4 py-6 flex justify-center">
+      <div class="w-full max-w-md">
+        <h2 class="text-2xl font-bold font-serif mb-3 text-center">
+          Search for a Book
+        </h2>
+        <div class="relative flex items-center">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Enter book title..."
+            class="w-full p-2 border text-black rounded-lg text-sm focus:ring focus:ring-blue-400"
+          />
+          <button
+            onclick="searchBooks()"
+            class="ml-2 bg-blue-600 text-white px-3 py-2 rounded-md text-sm hover:bg-blue-700"
+          >
+            🔍
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <div
+      id="results"
+      class="container mx-auto px-4 py-6 grid grid-cols-1 md:grid-cols-3 gap-4"
+    ></div>
+
+    <!-- REVIEW MODAL -->
+    <div
+      id="reviewModal"
+      class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold font-serif mb-4">Leave a Review</h2>
+        <input
+          id="reviewTitle"
+          type="text"
+          placeholder="Book Title"
+          class="w-full mb-2 p-2 border rounded"
+          readonly
+        />
+        <textarea
+          id="reviewText"
+          placeholder="Write your review..."
+          class="w-full mb-2 p-2 border rounded"
+        ></textarea>
+        <input
+          id="rating"
+          type="number"
+          min="1"
+          max="5"
+          placeholder="Rating (1-5)"
+          class="w-full mb-2 p-2 border rounded"
+        />
+        <button
+          onclick="submitReview()"
+          class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700"
+        >
+          Submit Review
+        </button>
+        <button
+          onclick="closeModal('reviewModal')"
+          class="mt-2 w-full text-gray-600 hover:underline"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+
+    <!-- REVIEWS LIST -->
+    <section id="reviewsSection" class="container mx-auto px-4 py-6">
+      <h2 class="text-2xl font-bold font-serif text-center mb-4">
+        User Reviews
+      </h2>
+      <div id="reviewsList" class="space-y-4"></div>
+    </section>
+
+    <!-- CAROUSEL SECTION -->
+    <section class="py-10">
+      <div class="container mx-auto">
+        <h2 class="text-3xl font-bold font-serif text-center mb-6">
+          Popular Books
+        </h2>
+
+        <div class="relative w-full overflow-hidden">
+          <!-- Buton Stânga -->
+          <button
+            id="prevBtn"
+            class="absolute left-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full shadow-md hover:bg-opacity-70 transition z-10"
+          >
+            ❮
+          </button>
+
+          <!-- Caruselul -->
+          <div
+            id="carousel"
+            class="flex gap-6 transition-transform duration-500 ease-in-out"
+          >
+            <img
+              src="images/ebook1.jpg"
+              alt="Book 1"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook2.jpg"
+              alt="Book 2"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook3.jpg"
+              alt="Book 3"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook4.jpg"
+              alt="Book 4"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook5.jpg"
+              alt="Book 5"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook6.jpg"
+              alt="Book 6"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook7.jpg"
+              alt="Book 7"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook8.jpg"
+              alt="Book 8"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+            <img
+              src="images/ebook9.jpg"
+              alt="Book 9"
+              class="carousel-item w-24 sm:w-32 md:w-40 lg:w-48 h-auto object-cover rounded-lg shadow-lg"
+            />
+          </div>
+
+          <!-- Buton Dreapta -->
+          <button
+            id="nextBtn"
+            class="absolute right-2 top-1/2 -translate-y-1/2 bg-black bg-opacity-50 text-white p-3 rounded-full shadow-md hover:bg-opacity-70 transition z-10"
+          >
+            ❯
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABOUT US SECTION -->
+    <section id="about" class="py-16 px-6">
+      <div
+        class="container mx-auto flex flex-col md:flex-row items-center justify-between bg-white p-8 rounded-lg shadow-lg"
+      >
+        <!-- Image -->
+        <div class="w-full md:w-1/2 mb-8 md:mb-0">
+          <img
+            src="https://res.cloudinary.com/bookbub/image/upload/f_auto,q_auto/welcome/kindle-ice-tea_2x"
+            alt="Kindle Image"
+            class="w-full h-auto"
+          />
+        </div>
+
+        <!-- About Us text -->
+        <div class="w-full md:w-1/2 pl-6">
+          <h2 class="text-3xl font-bold font-serif text-gray-900 mb-4">
+            About Us
+          </h2>
+          <p class="text-gray-700 text-lg mb-4 font-serif">
+            Readify is the ultimate platform for book lovers, offering book
+            reviews, recommendations, and a space to connect with fellow
+            readers. Whether you are looking for the latest bestseller, a
+            classic novel, or expert opinions, Readify has it all. We believe in
+            the power of stories and knowledge, and our goal is to foster a
+            community of passionate readers who share their love for books.
+          </p>
+          <p class="text-gray-700 text-lg font-serif">
+            Our platform allows users to easily search for books, leave reviews,
+            and browse recommendations based on their interests. Join our
+            growing community and dive into the world of books with Readify!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT US SECTION -->
+    <section id="contact" class="py-16 px-6">
+      <div
+        class="container mx-auto flex flex-col md:flex-row items-center justify-between bg-white p-8 rounded-lg shadow-lg"
+      >
+        <!-- Informații de contact  -->
+        <div class="w-full md:w-1/2 pl-6">
+          <h2 class="text-3xl font-bold font-serif text-gray-900 mb-4">
+            Contact Us
+          </h2>
+          <p class="text-gray-700 text-lg mb-4 font-serif">
+            We're here to help! Reach out to us anytime.
+          </p>
+
+          <div class="space-y-4 text-gray-800">
+            <p class="flex items-center">
+              📧
+              <span class="ml-2"
+                >Email:
+                <a
+                  href="mailto:support@readify.com"
+                  class="text-blue-600 hover:underline"
+                  >support@readify.com</a
+                ></span
+              >
+            </p>
+            <p class="flex items-center">
+              📞
+              <span class="ml-2"
+                >Phone:
+                <a href="tel:+1234567890" class="text-blue-600 hover:underline"
+                  >+1 234 567 890</a
+                ></span
+              >
+            </p>
+            <p class="flex items-center">
+              📍
+              <span class="ml-2">Address: 123 Book Street, Library City</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Imagine  -->
+        <div class="w-full md:w-1/2 mb-8 md:mb-0">
+          <img
+            src="images/cta_en_desktop_lg_2x.2042e733.png"
+            alt="Contact Image"
+            class="w-full h-auto"
+          />
+        </div>
+      </div>
+    </section>
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-white py-12 mt-16">
+      <div
+        class="container mx-auto flex flex-col md:flex-row items-center justify-between px-6"
+      >
+        <!-- Logo + Mesaj -->
+        <div class="text-center md:text-left mb-6 md:mb-0">
+          <h2 class="text-3xl font-bold font-mono text-blue-400">Readify</h2>
+          <p class="mt-2 text-gray-400 font-serif">
+            "A book is a dream you hold in your hands." – Neil Gaiman
+          </p>
+          <br />
+          <p class="mt-2 text-gray-400 font-serif">
+            © 2024 Readify. All Rights Reserved.
+          </p>
+        </div>
+
+        <!-- Link-uri -->
+        <div class="space-x-6 text-lg">
+          <a
+            href="#about"
+            class="text-gray-300 hover:text-blue-400 transition"
+            onclick="scrollToSection(event, 'about')"
+          >
+            About Us
+          </a>
+          <a
+            href="#contact"
+            class="text-gray-300 hover:text-blue-400 transition"
+            onclick="scrollToSection(event, 'contact')"
+          >
+            Contact Us
+          </a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="scripts.js"></script>
+     
+  </body>
+</html>
